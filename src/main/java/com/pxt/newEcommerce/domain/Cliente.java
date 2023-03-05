@@ -1,5 +1,6 @@
 package com.pxt.newEcommerce.domain;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -13,12 +14,13 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "JEANCRG.TCLIENTE")
-public class Cliente {
-
+public class Cliente implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_CLIENTE")
 	@SequenceGenerator(sequenceName = "SEQ_CLIENTE", allocationSize = 1, name = "SEQ_CLIENTE")
-    @SequenceGenerator(sequenceName = "SEQ_CLIENTE", allocationSize = 1, name = "SEQ_CLIENTE")
 	@Column(name = "CODCLI")
 	private Long codigo;
 	@Column(name = "DESNOM")

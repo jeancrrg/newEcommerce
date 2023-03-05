@@ -1,24 +1,31 @@
 package com.pxt.newEcommerce.domain;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "JEANCRG.TPRODUTO")
-public class Produto {
-
+public class Produto implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_PRODUTO")
 	@SequenceGenerator(sequenceName = "SEQ_PRODUTO", allocationSize = 1, name = "SEQ_PRODUTO")
-    @SequenceGenerator(sequenceName = "SEQ_PRODUTO", allocationSize = 1, name = "SEQ_PRODUTO")
 	@Column(name = "CODPROD")
 	private Long codigo;
 	@Column(name = "DESPROD")
@@ -29,7 +36,12 @@ public class Produto {
 	private Integer estoque;
 	@Column(name = "INDATV")
 	private boolean ativo;
-	//private Set<Categoria> categorias;
+	
+	@ManyToMany()
+	@JoinTable(name = "JEANCRG.TPROD_CATEGORIA",
+	joinColumns = @JoinColumn(name = "CODPROD"),
+	inverseJoinColumns = @JoinColumn(name = "CODCAT"))
+	private Set<Categoria> categorias = new HashSet<>();
 	
 	
 	public Produto() {
@@ -79,6 +91,10 @@ public class Produto {
 	}
 	public void setAtivo(boolean ativo) {
 		this.ativo = ativo;
+	}
+
+	public Set<Categoria> getCategorias() {
+		return categorias;
 	}
 
 	@Override

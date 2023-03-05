@@ -1,8 +1,11 @@
 package com.pxt.newEcommerce.domain;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,17 +14,21 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.pxt.newEcommerce.domain.enums.StatusPedido;
+
 @Entity
 @Table(name = "JEANCRG.TPEDIDO")
-public class Pedido {
-
+public class Pedido implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_PEDIDO")
 	@SequenceGenerator(sequenceName = "SEQ_PEDIDO", allocationSize = 1, name = "SEQ_PEDIDO")
-    @SequenceGenerator(sequenceName = "SEQ_PEDIDO", allocationSize = 1, name = "SEQ_PEDIDO")
 	@Column(name = "CODPED")
 	private Long codigo;
 	@Column(name = "DATPED")
@@ -39,17 +46,19 @@ public class Pedido {
 	@Column(name = "TOTPED")
 	private BigDecimal total;
 	
+	@OneToMany(mappedBy = "codigo.pedido")
+	Set<ItemPedido> itens = new HashSet<>();
 	
 	public Pedido() {
 	}
 
 
-	public Pedido(Long codigo, LocalDateTime data, Integer status, Cliente cliente, Integer codigoFilial,
+	public Pedido(Long codigo, LocalDateTime data, StatusPedido status, Cliente cliente, Integer codigoFilial,
 			Integer codigoPagamaneto, BigDecimal total) {
 		super();
 		this.codigo = codigo;
 		this.data = data;
-		this.status = status;
+		setStatus(status);
 		this.cliente = cliente;
 		this.codigoFilial = codigoFilial;
 		this.codigoPagamaneto = codigoPagamaneto;
@@ -71,11 +80,13 @@ public class Pedido {
 		this.data = data;
 	}
 
-	public Integer getStatus() {
-		return status;
+	public StatusPedido getStatus() {
+		return StatusPedido.retornarStatus(status);
 	}
-	public void setStatus(Integer status) {
-		this.status = status;
+	public void setStatus(StatusPedido statusPedido) {
+		if(statusPedido != null) {
+			this.status = statusPedido.getCodigo();
+		}
 	}
 
 	public Cliente getCliente() {

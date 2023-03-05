@@ -1,28 +1,38 @@
 package com.pxt.newEcommerce.domain;
 
+import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "JEANCRG.TCATEGORIA")
-public class Categoria {
-
+public class Categoria implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_CATEGORIA")
 	@SequenceGenerator(sequenceName = "SEQ_CATEGORIA", allocationSize = 1, name = "SEQ_CATEGORIA")
-    @SequenceGenerator(sequenceName = "SEQ_CATEGORIA", allocationSize = 1, name = "SEQ_CATEGORIA")
 	@Column(name = "CODCAT")
 	private Long codigo;
 	@Column(name = "DESCAT")
 	private String descricao;
-	//private Set<Produto> produtos;
+	
+	@JsonIgnore
+	@ManyToMany(mappedBy = "categorias")
+	private Set<Produto> produtos = new HashSet<>();
 	
 	
 	public Categoria() {
@@ -48,6 +58,10 @@ public class Categoria {
 	}
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
+	}
+
+	public Set<Produto> getProdutos() {
+		return produtos;
 	}
 
 	@Override
